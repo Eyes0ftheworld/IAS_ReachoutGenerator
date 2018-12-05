@@ -1,0 +1,93 @@
+function main() {
+  // Get Sheet Names
+  var ss = SpreadsheetApp.getActiveSpreadsheet(); 
+  var generatorSheet = ss.getSheetByName("Generator");
+  var dataSheet = ss.getSheetByName("Data");
+ 
+  var myName = generatorSheet.getRange("J1").getValue();
+  var body = '';
+  
+  var rangeData = generatorSheet.getRange("A3:A").getValues();
+  var lastRow = rangeData.filter(String).length;
+  Logger.log('Last Row: ' + lastRow);
+  var searchRange = generatorSheet.getRange(3,1,lastRow,14);
+  
+  var rangeValues = searchRange.getValues();
+  Logger.log('Range Values: ' + rangeValues);
+  
+    for (i = 0; i < lastRow; i++){
+    getReachoutValues(i,rangeValues);
+    var tableValues = createEmailWithValues();
+    createReachoutDraft(tableValues);
+  };
+  
+}
+
+function createReachoutDraft() {
+  var body = ""
+  GmailApp.createDraft(toField,subject,body,{htmlBody: htmlBody, cc: ccField});
+
+}
+
+function getReachoutValues() { 
+  // Get Sheet Names
+  var ss = SpreadsheetApp.getActiveSpreadsheet(); 
+  var generatorSheet = ss.getSheetByName("Generator");
+  var dataSheet = ss.getSheetByName("Data");
+  
+  var rangeData = generatorSheet.getRange("A3:A").getValues();
+  var lastRow = rangeData.filter(String).length;
+  var searchRange = generatorSheet.getRange(3,1,lastRow,14);
+  
+  var rangeValues = searchRange.getValues();
+  
+    var partner = rangeValues[i][0];
+    var viewCampaigns = rangeValues[i][1];
+    var viewRates = rangeValues[i][2];
+    var fraudCampaigns = rangeValues[i][3];
+    var fraudRates = rangeValues[i][4];
+    var bsCampaigns = rangeValues[i][5];
+    var bsRates = rangeValues[i][6];
+    var viewGoal = rangeValues[i][7];
+    var fraudGoal = rangeValues[i][8];
+    var bsGoal = rangeValues[i][9];
+    var toField = rangeValues[i][10];
+    var ccField = rangeValues[i][11];
+    var reachOutIncludes = rangeValues[i][12];
+    var subject = rangeValues[i][13];
+    var myName = generatorSheet.getRange("J1").getValue();
+    
+    // Set htmlBody based on data in reach-out
+    if(reachOutIncludes === 'VIEW/IVT/BS'){
+      var htmlBody = htmlEmailIntro(subject) + htmlEmailView(viewCampaigns,viewRates,viewGoal) + htmlEmailFraud(fraudCampaigns,fraudRates,fraudGoal) + htmlEmailBs(bsCampaigns,bsRates,bsGoal) + htmlEmailEnd(myName);
+    }else if(reachOutIncludes === 'VIEW'){
+      var htmlBody = htmlEmailIntro(subject) + htmlEmailView(viewCampaigns,viewRates,viewGoal) + htmlEmailEnd(myName);
+    }else if(reachOutIncludes === 'IVT'){
+      var htmlBody = htmlEmailIntro(subject) + htmlEmailFraud(fraudCampaigns,fraudRates,fraudGoal) + htmlEmailEnd(myName);
+    }else if(reachOutIncludes === 'BS'){
+      var htmlBody = htmlEmailIntro(subject) + htmlEmailBs(bsCampaigns,bsRates,bsGoal) + htmlEmailEnd(myName);
+    }else if(reachOutIncludes === 'VIEW/IVT'){
+      var htmlBody = htmlEmailIntro(subject) + htmlEmailView(viewCampaigns,viewRates,viewGoal) + htmlEmailFraud(fraudCampaigns,fraudRates,fraudGoal) + htmlEmailEnd(myName);
+    }else if(reachOutIncludes === 'VIEW/BS'){
+      var htmlBody = htmlEmailIntro(subject) + htmlEmailView(viewCampaigns,viewRates,viewGoal) + htmlEmailBs(bsCampaigns,bsRates,bsGoal) + htmlEmailEnd(myName);
+    }else if(reachOutIncludes === 'IVT/BS'){
+      var htmlBody = htmlEmailIntro(subject) + htmlEmailFraud(fraudCampaigns,fraudRates,fraudGoal) + htmlEmailBs(bsCampaigns,bsRates,bsGoal) + htmlEmailEnd(myName);
+    }
+    return {partner : partner,
+            viewCampaigns : viewCampaigns,
+            viewRates : viewRates,
+            fraudCampaigns : fraudCampaigns,
+            fraudRates : fraudRates,
+            bsCampaigns : bsCampaigns,
+            bsRates : bsRates,
+            viewGoal : viewGoal,
+            fraudGoal : fraudGoal,
+            bsGoal : bsGoal,
+            toField : toField,
+            ccField : ccField,
+            reachOutIncludes : reachOutIncludes,
+            subject : subject,
+            htmlBody: htmlBody};
+    
+}
+
