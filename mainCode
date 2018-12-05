@@ -34,15 +34,6 @@ function createReachoutDraft() {
 
 function getReachoutValues() { 
   // Get Sheet Names
-  /*var ss = SpreadsheetApp.getActiveSpreadsheet(); 
-  var generatorSheet = ss.getSheetByName("Generator");
-  var dataSheet = ss.getSheetByName("Data");
-  
-  var rangeData = generatorSheet.getRange("A3:A").getValues();
-  var lastRow = rangeData.filter(String).length;
-  var searchRange = generatorSheet.getRange(3,1,lastRow,14);
-  
-  var rangeValues = searchRange.getValues(); */
   var rangeValues = main(i);
   
     var partner = rangeValues[i][0];
